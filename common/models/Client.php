@@ -79,7 +79,7 @@ class Client extends \yii\db\ActiveRecord
                 'value' => function ($event) {
                     return \Yii::$app->user->id;
                 },
-            ],
+        ],
         'timestamp' => [
                 'class' => 'yii\behaviors\TimestampBehavior',
                 'attributes' => [
