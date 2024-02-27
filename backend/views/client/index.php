@@ -9,6 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 /** @var common\models\ClientSearch $searchModel */
+/** @var common\models\ClientSearch $clubs */
 
 
 
@@ -91,11 +92,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->createdBy->username;
                 },
             ],
-
-            //'updated_at',
-            //'updated_by',
-            //'deleted_at',
-            //'deleted_by',
+            [
+                'attribute'=>'Clubs',
+                'value'=>function ($model) {
+                    return $model->id;
+                }
+            ],
 
             [
                 'class' => ActionColumn::className(),

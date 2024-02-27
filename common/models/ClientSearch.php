@@ -23,7 +23,7 @@ class ClientSearch extends Client
     {
         return [
             [['id', 'gender', 'created_at', 'updated_at', 'deleted_at',], 'integer'],
-            [['full_name', 'birthday',"created_by","updated_by",'created_at_range','birthday_range', 'created_by_string',], 'safe'],
+            [['full_name', 'birthday',"created_by","updated_by",'created_at_range','birthday_range', 'created_by_string','clubs'], 'safe'],
         ];
     }
 
@@ -46,6 +46,7 @@ class ClientSearch extends Client
     public function search($params)
     {
         $query = Client::find()->alias('t');
+        $clubs= ClientClub::find();
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,6 +56,7 @@ class ClientSearch extends Client
         if ($this->created_by){
             $query->joinWith('createdBy u');
         }
+
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -67,6 +69,7 @@ class ClientSearch extends Client
             't.gender' => $this->gender,
             't.birthday' => $this->birthday,
         ]);
+
 
         $query->andFilterWhere(['like', 't.full_name', $this->full_name]);
         if ($this->created_by) {
