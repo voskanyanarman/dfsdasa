@@ -31,14 +31,25 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'full_name',
-            'gender',
+            ['attribute' => 'gender',
+            'value' => $model->gender == 1 ? 'Male' : 'Female',
+            ],
             'birthday',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
-            'deleted_at',
-            'deleted_by',
+            'created_at:datetime',
+            [
+                'attribute'=>'created_by',
+                'value'=> \backend\components\Helper::getUsername($model->created_by),
+            ],
+            'updated_at:datetime',
+            [
+                'attribute'=>'updated_by',
+                'value'=> \backend\components\Helper::getUsername($model->updated_by),
+            ],
+            'deleted_at:datetime',
+            [
+                'attribute'=>'deleted_by',
+                'value'=> \backend\components\Helper::getUsername($model->deleted_by),
+            ],
         ],
     ]) ?>
 

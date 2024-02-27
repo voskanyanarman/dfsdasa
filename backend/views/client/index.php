@@ -8,9 +8,13 @@ use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var common\models\ClientSearch $searchModel */
+
+
 
 $this->title = 'Clients';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="client-index">
 
@@ -23,19 +27,76 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
+//            ['class' => 'yii\grid\SerialColumn'],
             'id',
             'full_name',
-            'gender',
-            'birthday',
-            'created_at',
-            //'created_by',
+            [
+                'attribute'=> 'gender',
+                'value' => function ($data) {
+
+                    if ($data->gender == 1){
+                        return 'Male' ;
+                    }
+                    else {
+                        return 'Female' ;
+                    }
+                },
+                'filter' => array( 1 => "Male",2=>"Female"),
+            ],
+            [
+                "attribute" => "birthday",
+                'value' => function ($model) {
+                    if (extension_loaded('')) {
+                        return Yii::t('app', '{0, date, MMMM dd, YYYY}', [$model->birthday]);
+                    } else {
+                        return $model->birthday;
+                    }
+                },
+                'filter' => \kartik\daterange\DateRangePicker::widget([
+                    'name'=>'birthday',
+                    'convertFormat'=>true,
+                    'includeMonthsFilter'=>true,
+                    'attribute' => 'birthday_range',
+                    'model' => $searchModel,
+                    'pluginOptions' => ['locale' => ['format' => 'Y-m-d']],
+                    'options' => ['placeholder' => 'Select Date']
+                ])
+            ],
+            [
+                // the attribute
+                'attribute'=>"created_at",
+                'value' => function ($model) {
+                    if (extension_loaded('')) {
+                        return Yii::t('app', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
+                    } else {
+                        return date('Y-m-d H:i:s', $model->created_at);
+                    }
+                },
+                'filter' => \kartik\daterange\DateRangePicker::widget([
+                    'name'=>'created_at',
+                    'convertFormat'=>true,
+                    'includeMonthsFilter'=>true,
+                    'attribute' => 'created_at_range',
+                    'model' => $searchModel,
+                    'pluginOptions' => ['locale' => ['format' => 'Y-m-d']],
+                    'options' => ['placeholder' => 'Select Date']
+                ])
+            ],
+
+            [
+                'attribute'=>'created_by',
+                'value'=> function ($model) {
+                    return $model->createdBy->username;
+                },
+            ],
+
             //'updated_at',
             //'updated_by',
             //'deleted_at',
             //'deleted_by',
+
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Client $model, $key, $index, $column) {

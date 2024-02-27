@@ -2,8 +2,12 @@
 
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
-use yii\jui\DatePicker;
+use kartik\date\DatePicker;
 use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
+use dosamigos\multiselect\MultiSelect;
+
+
 
 /** @var yii\web\View $this */
 /** @var common\models\Client $model */
@@ -20,16 +24,20 @@ use yii\helpers\ArrayHelper;
     <?= $form->field($model, 'gender')->dropDownList([ '1' => 'Male', '2' => 'Female', ], ['prompt' => 'Select Gender']) ?>
 
     <?= $form->field($model, 'birthday')->widget(DatePicker::classname(), [
-        'model' => $model,
-        'dateFormat' => 'yyyy-MM-dd',
-        'options' => ['class' => 'form-control'],
-    ]) ?>
-    <?= $form->field($model, 'clubs')->listBox(
-        \yii\helpers\ArrayHelper::map(\common\models\Club::find()->all(), 'id', 'name'),
-        ['prompt' => 'Select Club'],
-        ['multiple'=>'multiple']
-
-    ) ?>
+        'options' => ['placeholder' => 'Enter birth date ...'],
+        'pluginOptions' => [
+            'autoclose' => true,
+            'format' => 'yyyy-m-dd'
+        ]
+    ])?>
+    <?= $form->field($model, 'clubs_list')->widget(Select2::classname(), ['data' => ArrayHelper::map(\common\models\Club::find()->all(),'id',"name"),
+'options' => ['placeholder' => 'Select a clubs ...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+            'multiple' => true
+        ],
+    ])
+   ?>
 
 
 

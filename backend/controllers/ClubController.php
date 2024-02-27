@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Club;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveRecord;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -121,8 +122,9 @@ class ClubController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model=$this->findModel($id);
+        $model->trigger(ActiveRecord::EVENT_BEFORE_DELETE);
+        $model->save();
         return $this->redirect(['index']);
     }
 

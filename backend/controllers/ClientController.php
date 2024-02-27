@@ -2,11 +2,14 @@
 
 namespace backend\controllers;
 
+use backend\components\Helper;
 use common\models\Client;
-use yii\data\ActiveDataProvider;
+use common\models\ClientClub;
+use common\models\ClientSearch;
+use yii\db\ActiveRecord;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * ClientController implements the CRUD actions for Client model.
@@ -31,28 +34,18 @@ class ClientController extends Controller
         );
     }
 
+
     /**
      * Lists all Client models.
      *
      * @return string
      */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Client::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+    public function actionIndex(){
 
+        $searchModel = new ClientSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -65,8 +58,9 @@ class ClientController extends Controller
      */
     public function actionView($id)
     {
+        $model=$this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -80,9 +74,14 @@ class ClientController extends Controller
         $model = new Client();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            $model->load($this->request->post()) && $model->save();
+            if ($model->clubs_list) {
+                foreach ($model->clubs_list as $club) {
+                    $model->saveClubs($model->id,$club);
+                }
+
             }
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $model->loadDefaultValues();
         }
@@ -102,11 +101,16 @@ class ClientController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $model->deleteClubs($id);
         if ($this->request->isPost && $model->load($this->request->post())) {
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            $model->save();
+            if ($model->clubs_list) {
+                foreach ($model->clubs_list as $club) {
+                    $model->saveClubs($id,$club);
+                }
+
             }
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -123,7 +127,9 @@ class ClientController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->trigger(ActiveRecord::EVENT_BEFORE_DELETE);
+        $model->save();
 
         return $this->redirect(['index']);
     }
@@ -143,4 +149,5 @@ class ClientController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
 }

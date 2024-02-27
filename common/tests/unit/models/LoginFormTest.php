@@ -33,8 +33,8 @@ class LoginFormTest extends \Codeception\Test\Unit
     public function testLoginNoUser()
     {
         $model = new LoginForm([
-            'username' => 'not_existing_username',
-            'password' => 'not_existing_password',
+            'username' => 'username',
+            'password' => 'password',
         ]);
 
         verify($model->login())->false();

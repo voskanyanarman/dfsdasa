@@ -24,13 +24,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
+//            ['class' => 'yii\grid\SerialColumn'],
             'id',
             'name',
             'adress:ntext',
-            'created_at',
-            'created_by',
+            'created_at:datetime',
+            [
+                'attribute'=>'created_by',
+                'value'=> function ($model) {
+                    return $model->createdBy->username;
+                },
+            ],
             //'updated_at',
             //'updated_by',
             //'deleted_at',

@@ -1,11 +1,6 @@
 <?php
 
 namespace backend\components;
-
-
-/**
- * ClientController implements the CRUD actions for Client model.
- */
 class Helper
 {
     public static function pr($data, $t = false)
@@ -16,5 +11,15 @@ class Helper
             die;
         }
         echo '</pre>';
+    }
+    public static function getUsername($user_id)
+    {
+        if (\common\models\User::findIdentity($user_id)) {
+            $username = \common\models\User::findIdentity($user_id)->username;
+            return $username;
+        }
+        else{
+            return null;
+        }
     }
 }

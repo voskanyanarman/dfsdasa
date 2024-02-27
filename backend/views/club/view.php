@@ -34,9 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'adress:ntext',
             'created_at',
             'created_by',
-            'updated_at',
+            'updated_at:datetime',
             'updated_by',
-            'deleted_at',
+            'deleted_at:datetime',
             'deleted_by',
         ],
     ]) ?>

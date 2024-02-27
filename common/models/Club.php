@@ -3,8 +3,10 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "club".
@@ -67,15 +69,22 @@ class Club extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => BlameableBehavior::className(),
-                'createdByAttribute' => 'created_by',
-                'updatedByAttribute' => 'updated_by',
+                'class' => AttributeBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_by',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_by',
+                    ActiveRecord::EVENT_BEFORE_DELETE => 'deleted_by',
+                ],
+                'value' => function ($event) {
+                    return \Yii::$app->user->id;
+                },
             ],
             'timestamp' => [
                 'class' => 'yii\behaviors\TimestampBehavior',
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                    ActiveRecord::EVENT_BEFORE_DELETE => ['deleted_at'],
                 ],
             ],
         ];
@@ -100,7 +109,10 @@ class Club extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ClientClub::class, ['club_id' => 'id']);
     }
-
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
     /**
      * Gets query for [[Clients]].
      *
@@ -110,4 +122,5 @@ class Club extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Client::class, ['id' => 'client_id'])->viaTable('client_club', ['club_id' => 'id']);
     }
+
 }
