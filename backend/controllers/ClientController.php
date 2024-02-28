@@ -8,6 +8,7 @@ use common\models\ClientClub;
 use common\models\ClientSearch;
 use yii\db\ActiveRecord;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -44,6 +45,8 @@ class ClientController extends Controller
 
         $searchModel = new ClientSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

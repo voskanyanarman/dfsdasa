@@ -2,8 +2,10 @@
 
 namespace common\models;
 
+use backend\components\Helper;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 
 /**
@@ -101,6 +103,7 @@ class Client extends \yii\db\ActiveRecord
         return $this->hasMany(ClientClub::class, ['client_id' => 'id']);
     }
 
+
     /**
      * Gets query for [[Clubs]].
      *
@@ -115,10 +118,7 @@ class Client extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'created_by']);
     }
-    public function getClubName()
-    {
-        return $this->club ? $this->club->name : null;
-    }
+
 //    public function beforeDelete()
 //    {
 //        if (!parent::beforeDelete()) {
@@ -143,4 +143,9 @@ class Client extends \yii\db\ActiveRecord
 
     }
 
+
+    public function getClubsList()
+    {
+        return ArrayHelper::map($this->clientClubs,"club_id","club.name");
+    }
 }

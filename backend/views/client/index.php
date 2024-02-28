@@ -5,11 +5,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-
+use \yii\helpers\ArrayHelper;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 /** @var common\models\ClientSearch $searchModel */
-/** @var common\models\ClientSearch $clubs */
 
 
 
@@ -24,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Client', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -93,10 +91,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             [
-                'attribute'=>'Clubs',
-                'value'=>function ($model) {
-                    return $model->id;
-                }
+                'label'=>"Club",
+                'attribute'=>'club',
+                'value'=>function ($data) {
+                    return implode(', ', $data->getClubsList());
+                },
+                'filter'=> ArrayHelper::map(\common\models\Club::find()->all(), 'id', 'name'),
             ],
 
             [

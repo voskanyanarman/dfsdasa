@@ -31,8 +31,8 @@ use dosamigos\multiselect\MultiSelect;
         ]
     ])?>
     <?= $form->field($model, 'clubs_list')->widget(Select2::classname(), ['data' => ArrayHelper::map(\common\models\Club::find()->all(),'id',"name"),
-'options' => ['placeholder' => 'Select a clubs ...'],
-        'pluginOptions' => [
+            'options' => ['placeholder' => 'Select a clubs ...'],
+            'pluginOptions' => [
             'allowClear' => true,
             'multiple' => true
         ],

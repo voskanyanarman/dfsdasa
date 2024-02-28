@@ -1,5 +1,6 @@
 <?php
 
+use backend\components\Helper;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -31,24 +32,31 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'full_name',
-            ['attribute' => 'gender',
-            'value' => $model->gender == 1 ? 'Male' : 'Female',
+            [
+                    'attribute' => 'gender',
+                    'value' => $model->gender == 1 ? 'Male' : 'Female',
             ],
             'birthday',
             'created_at:datetime',
             [
-                'attribute'=>'created_by',
-                'value'=> \backend\components\Helper::getUsername($model->created_by),
+                    'attribute'=>'created_by',
+                    'value'=> \backend\components\Helper::getUsername($model->created_by),
             ],
             'updated_at:datetime',
             [
-                'attribute'=>'updated_by',
-                'value'=> \backend\components\Helper::getUsername($model->updated_by),
+                    'attribute'=>'updated_by',
+                    'value'=> \backend\components\Helper::getUsername($model->updated_by),
             ],
             'deleted_at:datetime',
             [
-                'attribute'=>'deleted_by',
-                'value'=> \backend\components\Helper::getUsername($model->deleted_by),
+                    'attribute'=>'deleted_by',
+                    'value'=> \backend\components\Helper::getUsername($model->deleted_by),
+            ],
+            [
+                'attribute'=>'Clubs',
+                'value'=>function ($data) {
+                    return implode(', ', $data->getClubsList());
+                }
             ],
         ],
     ]) ?>

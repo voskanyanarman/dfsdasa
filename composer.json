@@ -21,7 +21,10 @@
         "kartik-v/yii2-widget-datepicker": "dev-master",
         "yiisoft/yii2-bootstrap5": "@dev",
         "kartik-v/yii2-widget-select2": "dev-master",
-        "kartik-v/yii2-date-range": "dev-master"
+        "kartik-v/yii2-editable": "@dev",
+        "kartik-v/yii2-popover-x": "@dev",
+        "jino5577/yii2-date-range-picker": "*"
+
 
     },
     "require-dev": {
